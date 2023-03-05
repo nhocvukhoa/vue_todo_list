@@ -17,17 +17,27 @@
         </div>
         <hr />
         <ul class="list-unstyled">
-          <li class="ui-state-default li-items mt-1">
+          <li
+            class="ui-state-default li-items mt-1"
+            v-for="todo in todos"
+            :key="todo.id"
+          >
             <div class="input-group">
               <div class="input-group-prepend">
                 <div class="input-group-text">
                   <input
                     type="checkbox"
                     aria-label="Radio button for following text input"
+                    :checked="todo.checked"
                   />
                 </div>
               </div>
-              <input type="text" class="form-control" />
+              <input
+                type="text"
+                class="form-control"
+                :class="{ 'done-task': todo.completed }"
+                v-model="todo.content"
+              />
               <div class="input-group-append remove-icon">
                 <span class="input-group-text">&#10060;</span>
               </div>
@@ -68,7 +78,28 @@
   </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      todos: [
+        {
+          id: 1,
+          content: "Nội dung 1",
+          checked: true,
+          completed: true,
+        },
+        {
+          id: 2,
+          content: "Nội dung 2",
+          checked: false,
+          completed: false,
+        },
+      ],
+    };
+  },
+};
+</script>
 
 <!-- Thêm "scoped" giới hạn CSS bên dưới chỉ áp dụng cho component này -->
 <style scoped>
