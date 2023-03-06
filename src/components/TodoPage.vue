@@ -27,7 +27,7 @@
           <ul class="list-unstyled">
             <li
               class="ui-state-default li-items mt-1"
-              v-for="todo in todos"
+              v-for="(todo, index) in todos"
               :key="todo.id"
             >
               <div class="input-group">
@@ -47,7 +47,9 @@
                   v-model="todo.content"
                 />
                 <div class="input-group-append remove-icon">
-                  <span class="input-group-text">&#10060;</span>
+                  <span class="input-group-text" @click="deleteTask(index)"
+                    >&#10060;</span
+                  >
                 </div>
               </div>
             </li>
@@ -140,6 +142,11 @@ export default {
           checked: false,
           completed: false,
         });
+      }
+    },
+    deleteTask(index) {
+      if (confirm("Bạn có chắc chắn muốn xóa task này không?")) {
+        this.todos.splice(index, 1);
       }
     },
   },
