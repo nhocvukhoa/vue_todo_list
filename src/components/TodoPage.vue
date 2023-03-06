@@ -93,23 +93,11 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      todos: [
-        {
-          id: 1,
-          content: "Nội dung 1",
-          checked: false,
-          completed: false,
-        },
-        {
-          id: 2,
-          content: "Nội dung 2",
-          checked: false,
-          completed: false,
-        },
-      ],
+      todos: [],
       error: {
         message: "",
         status: false,
@@ -154,6 +142,11 @@ export default {
         todo.checked = flag;
       });
     },
+  },
+  created() {
+    axios.get("http://127.0.0.1:8000/api/todos").then((response) => {
+      this.todos = response.data.data;
+    });
   },
 };
 </script>
