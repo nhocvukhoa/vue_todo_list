@@ -4,46 +4,58 @@
       <div class="todo-list not-done">
         <h1>TODOS</h1>
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Enter content" />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter content"
+            v-model="textContent"
+          />
           <div class="input-group-append">
             <button
               class="btn btn-outline-secondary"
               type="button"
               id="button-addon2"
+              @click="addTask"
             >
               Add
             </button>
           </div>
         </div>
+        <p :class="{ 'error-text': error.status }">{{ error.message }}</p>
         <hr />
-        <ul class="list-unstyled">
-          <li
-            class="ui-state-default li-items mt-1"
-            v-for="todo in todos"
-            :key="todo.id"
-          >
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <input
-                    type="checkbox"
-                    aria-label="Radio button for following text input"
-                    :checked="todo.checked"
-                  />
+        <div v-if="todos.length">
+          <ul class="list-unstyled">
+            <li
+              class="ui-state-default li-items mt-1"
+              v-for="todo in todos"
+              :key="todo.id"
+            >
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <input
+                      type="checkbox"
+                      aria-label="Radio button for following text input"
+                      :checked="todo.checked"
+                    />
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  :class="{ 'done-task': todo.completed }"
+                  v-model="todo.content"
+                />
+                <div class="input-group-append remove-icon">
+                  <span class="input-group-text">&#10060;</span>
                 </div>
               </div>
-              <input
-                type="text"
-                class="form-control"
-                :class="{ 'done-task': todo.completed }"
-                v-model="todo.content"
-              />
-              <div class="input-group-append remove-icon">
-                <span class="input-group-text">&#10060;</span>
-              </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p>Chưa có task nào được tạo</p>
+        </div>
         <hr />
         <div class="todo-footer row">
           <div class="col-md-6">
@@ -86,8 +98,8 @@ export default {
         {
           id: 1,
           content: "Nội dung 1",
-          checked: true,
-          completed: true,
+          checked: false,
+          completed: false,
         },
         {
           id: 2,
@@ -96,7 +108,40 @@ export default {
           completed: false,
         },
       ],
+      error: {
+        message: "",
+        status: false,
+      },
+      textContent: "",
+      code: 2,
     };
+  },
+  methods: {
+    addTask() {
+      if (this.textContent.trim().length === 0) {
+        this.error = {
+          message: "Không được để trống nội dung",
+          status: true,
+        };
+      } else if (this.textContent.length > 30) {
+        this.error = {
+          message: "Nội dung chỉ giới hạn 30 ký tự",
+          status: true,
+        };
+      } else {
+        this.code++;
+        this.error = {
+          message: "",
+          status: false,
+        };
+        this.todos.push({
+          id: this.code,
+          content: this.textContent,
+          checked: false,
+          completed: false,
+        });
+      }
+    },
   },
 };
 </script>
@@ -145,5 +190,9 @@ export default {
 
 .input-group-text {
   height: 100%;
+}
+
+.error-text {
+  color: red;
 }
 </style>
