@@ -61,13 +61,13 @@
         <hr />
         <div class="todo-footer row">
           <div class="col-md-6">
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline" @click="checkAll(true)">
               &#9989;
               <label class="form-check-label" for="inlineRadio1"
                 >Check all</label
               >
             </div>
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline" @click="checkAll(false)">
               &#10062;
               <label class="form-check-label" for="inlineRadio2"
                 >UnCheck all</label
@@ -148,6 +148,11 @@ export default {
       if (confirm("Bạn có chắc chắn muốn xóa task này không?")) {
         this.todos.splice(index, 1);
       }
+    },
+    checkAll(flag) {
+      this.todos.forEach((todo) => {
+        todo.checked = flag;
+      });
     },
   },
 };
