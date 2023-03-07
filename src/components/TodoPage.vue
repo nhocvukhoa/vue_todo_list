@@ -94,6 +94,8 @@
 
 <script>
 import axios from "axios";
+import toastr from "toastr";
+
 export default {
   data() {
     return {
@@ -134,6 +136,7 @@ export default {
         axios.post("http://127.0.0.1:8000/api/add", params).then((response) => {
           this.todos = response.data.data;
           this.textContent = "";
+          toastr.success("Thêm task thành công!");
         });
 
         this.error = {
