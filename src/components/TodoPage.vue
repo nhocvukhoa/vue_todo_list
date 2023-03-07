@@ -27,7 +27,7 @@
           <ul class="list-unstyled">
             <li
               class="ui-state-default li-items mt-1"
-              v-for="(todo, index) in todos"
+              v-for="todo in todos"
               :key="todo.id"
             >
               <div class="input-group">
@@ -47,7 +47,7 @@
                   v-model="todo.content"
                 />
                 <div class="input-group-append remove-icon">
-                  <span class="input-group-text" @click="deleteTask(index)"
+                  <span class="input-group-text" @click="deleteTask(todo.id)"
                     >&#10060;</span
                   >
                 </div>
@@ -145,9 +145,14 @@ export default {
         };
       }
     },
-    deleteTask(index) {
+    deleteTask(id) {
       if (confirm("Bạn có chắc chắn muốn xóa task này không?")) {
-        this.todos.splice(index, 1);
+        axios
+          .post("http://127.0.0.1:8000/api/delete/", { id: id })
+          .then((response) => {
+            this.todos = response.data.data;
+            toastr.success("Xóa task thành công!");
+          });
       }
     },
     checkAll(flag) {
