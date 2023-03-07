@@ -106,6 +106,11 @@ export default {
       code: 2,
     };
   },
+  created() {
+    axios.get("http://127.0.0.1:8000/api/todos").then((response) => {
+      this.todos = response.data.data;
+    });
+  },
   methods: {
     addTask() {
       if (this.textContent.trim().length === 0) {
@@ -119,17 +124,22 @@ export default {
           status: true,
         };
       } else {
-        this.code++;
-        this.error = {
-          message: "",
-          status: false,
-        };
-        this.todos.push({
+        let params = {
           id: this.code,
           content: this.textContent,
           checked: false,
           completed: false,
+        };
+
+        axios.post("http://127.0.0.1:8000/api/add", params).then((response) => {
+          this.todos = response.data.data;
+          this.textContent = "";
         });
+
+        this.error = {
+          message: "",
+          status: false,
+        };
       }
     },
     deleteTask(index) {
@@ -142,11 +152,6 @@ export default {
         todo.checked = flag;
       });
     },
-  },
-  created() {
-    axios.get("http://127.0.0.1:8000/api/todos").then((response) => {
-      this.todos = response.data.data;
-    });
   },
 };
 </script>
