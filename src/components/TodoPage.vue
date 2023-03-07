@@ -94,6 +94,8 @@
 
 <script>
 import axios from "axios";
+import toastr from "toastr";
+
 export default {
   data() {
     return {
@@ -105,6 +107,11 @@ export default {
       textContent: "",
       code: 2,
     };
+  },
+  created() {
+    axios.get("http://127.0.0.1:8000/api/todos").then((response) => {
+      this.todos = response.data.data;
+    });
   },
   methods: {
     addTask() {
@@ -119,17 +126,23 @@ export default {
           status: true,
         };
       } else {
-        this.code++;
-        this.error = {
-          message: "",
-          status: false,
-        };
-        this.todos.push({
+        let params = {
           id: this.code,
           content: this.textContent,
           checked: false,
           completed: false,
+        };
+
+        axios.post("http://127.0.0.1:8000/api/add", params).then((response) => {
+          this.todos = response.data.data;
+          this.textContent = "";
+          toastr.success("Thêm task thành công!");
         });
+
+        this.error = {
+          message: "",
+          status: false,
+        };
       }
     },
     deleteTask(index) {
@@ -142,11 +155,6 @@ export default {
         todo.checked = flag;
       });
     },
-  },
-  created() {
-    axios.get("http://127.0.0.1:8000/api/todos").then((response) => {
-      this.todos = response.data.data;
-    });
   },
 };
 </script>
