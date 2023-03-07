@@ -36,7 +36,8 @@
                     <input
                       type="checkbox"
                       aria-label="Radio button for following text input"
-                      :checked="todo.checked"
+                      v-model="selectedTask"
+                      :value="todo.id"
                     />
                   </div>
                 </div>
@@ -61,13 +62,13 @@
         <hr />
         <div class="todo-footer row">
           <div class="col-md-6">
-            <div class="form-check form-check-inline" @click="checkAll(true)">
+            <div class="form-check form-check-inline" @click="checkAll(1)">
               &#9989;
               <label class="form-check-label" for="inlineRadio1"
                 >Check all</label
               >
             </div>
-            <div class="form-check form-check-inline" @click="checkAll(false)">
+            <div class="form-check form-check-inline" @click="checkAll(0)">
               &#10062;
               <label class="form-check-label" for="inlineRadio2"
                 >UnCheck all</label
@@ -81,7 +82,11 @@
               </button>
             </div>
             <div class="form-check form-check-inline save-all">
-              <button type="button" class="btn btn-dark btn-sm">
+              <button
+                type="button"
+                class="btn btn-dark btn-sm"
+                @click="deleteAll"
+              >
                 DEL ALL &#10006;
               </button>
             </div>
@@ -105,7 +110,7 @@ export default {
         status: false,
       },
       textContent: "",
-      code: 2,
+      selectedTask: [],
     };
   },
   created() {
@@ -159,6 +164,18 @@ export default {
       this.todos.forEach((todo) => {
         todo.checked = flag;
       });
+    },
+    deleteAll() {
+      if (confirm("Bạn có chắc chắn muốn xóa tất cả các task đã chọn không?")) {
+        let params = this.selectedTask;
+        axios
+          .post("http://127.0.0.1:8000/api/deleteAll", { params })
+          .then((response) => {
+            this.todos = response.data.data;
+            this.selectedTask = [];
+            toastr.success("Xóa task thành công!");
+          });
+      }
     },
   },
 };
