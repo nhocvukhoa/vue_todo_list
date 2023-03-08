@@ -77,7 +77,11 @@
           </div>
           <div class="col-md-6 save-all">
             <div class="form-check form-check-inline save-all">
-              <button type="button" class="btn btn-success btn-sm">
+              <button
+                type="button"
+                class="btn btn-success btn-sm"
+                @click="doneAll"
+              >
                 DONE ALL &#10004;
               </button>
             </div>
@@ -173,7 +177,23 @@ export default {
           .then((response) => {
             this.todos = response.data.data;
             this.selectedTask = [];
-            toastr.success("Xóa task thành công!");
+            toastr.success("Xóa các task thành công!");
+          });
+      }
+    },
+    doneAll() {
+      if (
+        confirm(
+          "Bạn có chắc chắn muốn hoàn thành tất cả các task đã chọn không?"
+        )
+      ) {
+        let params = this.selectedTask;
+        axios
+          .put("http://127.0.0.1:8000/api/doneAll", { params })
+          .then((response) => {
+            this.todos = response.data.data;
+            this.selectedTask = [];
+            toastr.success("Hoàn thành các task thành công!");
           });
       }
     },
